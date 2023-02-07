@@ -1,14 +1,16 @@
 package challenge1_ComputerScience;
-import java.io.File;  // Import the File class
-import java.io.FileNotFoundException;  // Import this class to handle errors
-import java.util.Scanner; // Import the Scanner class to read text files
 
-// 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
+// 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
 
 public class Main {
 
 	public static void main(String[] args) {
 		
-		DanceFloor piso = new DanceFloor("prueba1.txt");
+		DanceFloor endavaParty = new DanceFloor("DanceFloor01.txt");
+		System.out.print("Longest Endavans Line Dance is: ");
+		System.out.println(endavaParty.getLongestStringPath());
+		System.out.print("Length of Path is: ");
+		System.out.println(endavaParty.getLongestPath());
+		
 	}
 }
