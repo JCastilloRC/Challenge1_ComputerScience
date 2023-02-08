@@ -1,7 +1,5 @@
 package challenge1_ComputerScience;
 
-// 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
-
 public class Main {
 
 	public static void main(String[] args) {
