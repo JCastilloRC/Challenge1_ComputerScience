@@ -85,7 +85,7 @@ public class DanceFloor {
 					stringPaths[rows][columns] = Integer.toString(danceFloorPeople[rows][columns]);
 				}
 			    currentPath = lengthPaths[rows][columns];
-				if(currentPath > longestPath) {
+				if(currentPath >= longestPath) {
 					longestPath = currentPath;
 					longestStringPath = stringPaths[rows][columns];
 				}
