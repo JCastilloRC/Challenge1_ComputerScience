@@ -2,6 +2,7 @@ package challenge1_ComputerScience;
 import java.io.File;  
 import java.io.FileNotFoundException;  
 import java.util.Scanner; 
+import java.util.Arrays;
 
 public class DanceFloor {
 	
@@ -10,9 +11,14 @@ public class DanceFloor {
 	private int longestPath = 0;
 	private String longestStringPath;
 	
-	public DanceFloor(String filePath){
+	public DanceFloor(String filePath, boolean isOptimized){
 		setDanceFloorPeople(filePath);	
-		setLongestPath();
+		if(isOptimized) {
+			setLongestPath();
+		}
+		else {
+			setLongestPathNotOptimal();
+		}
     }
 	
 	private void setDanceFloorPeople(String filePath) {
@@ -22,7 +28,7 @@ public class DanceFloor {
 		      Scanner reader = new Scanner(textFile);
 		      while (reader.hasNextLine()) {
 		    	if(rows == -1) {
-		    		danceFloorLength = Integer.parseInt(reader.nextLine());
+		    		danceFloorLength = Integer.parseInt(reader.nextLine().replaceAll("\\s",""));
 		    		danceFloorPeople = new int[danceFloorLength][danceFloorLength];
 		    	}
 		    	else {
@@ -86,7 +92,65 @@ public class DanceFloor {
 			}
 		}
 	}
-
+	
+	private void setLongestPathNotOptimal() {
+		for (int rows = 0 ; rows < danceFloorLength; rows++) {
+			for (int columns = 0; columns < danceFloorLength; columns++) {				
+				int[] currentPath = getOnePath(rows, columns);	
+				if(currentPath.length > longestPath) {
+					longestPath = currentPath.length;
+					longestStringPath = Arrays.toString(currentPath);
+				}
+			}
+		}
+		longestStringPath = longestStringPath.replaceAll("\\[|\\]|,", "").replaceAll("\\s", " - ");
+	}
+	
+	private int[] getOnePath(int rows, int columns) {
+		int[] rightPath = {};
+		int[] downPath = {};
+		if (rows == danceFloorLength - 1 && columns == danceFloorLength - 1) {
+			return new int[]{danceFloorPeople[rows][columns]};
+		}
+		else {	
+			try {
+				if(danceFloorPeople[rows][columns] == danceFloorPeople[rows][columns + 1] + 1 || danceFloorPeople[rows][columns] == danceFloorPeople[rows][columns + 1] - 1 ) {
+					rightPath = getOnePath(rows, columns + 1);
+				}
+			}catch(ArrayIndexOutOfBoundsException e){
+				rightPath = new int[0];
+			}
+			try {
+				if(danceFloorPeople[rows][columns] == danceFloorPeople[rows + 1][columns] + 1 || danceFloorPeople[rows][columns] == danceFloorPeople[rows + 1][columns] - 1 ) {
+					downPath = getOnePath(rows + 1, columns);
+				}
+			}catch(ArrayIndexOutOfBoundsException e){
+				downPath = new int[0];
+			}
+			if(rightPath.length > downPath.length) {
+				int[] finalPath = new int[1 + rightPath.length];
+				System.arraycopy(new int[]{danceFloorPeople[rows][columns]}, 0, finalPath, 0, 1);  
+				System.arraycopy(rightPath, 0, finalPath, 1, rightPath.length);
+				return finalPath;	
+			}
+			else if(downPath.length > rightPath.length) {
+				int[] finalPath = new int[1 + downPath.length];
+				System.arraycopy(new int[]{danceFloorPeople[rows][columns]}, 0, finalPath, 0, 1);  
+				System.arraycopy(downPath, 0, finalPath, 1, downPath.length);
+				return finalPath;
+			}
+			else if(downPath.length == rightPath.length && downPath.length + rightPath.length != 0){
+				int[] finalPath = new int[1 + rightPath.length];
+				System.arraycopy(new int[]{danceFloorPeople[rows][columns]}, 0, finalPath, 0, 1);  
+				System.arraycopy(rightPath, 0, finalPath, 1, rightPath.length);
+				return finalPath;
+			}
+			else {
+				return new int[]{danceFloorPeople[rows][columns]};	
+			}
+		}
+	}
+	
 	public int getLongestPath() {
 		return longestPath;
 	}
